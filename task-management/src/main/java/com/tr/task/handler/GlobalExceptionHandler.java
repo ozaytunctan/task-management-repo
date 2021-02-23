@@ -1,5 +1,6 @@
 package com.tr.task.handler;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -13,9 +14,15 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ControllerAdvice
-public class GlobalExceptionHandler  {
+import com.tr.task.dto.ErrorDetail;
+import com.tr.task.dto.ServiceResult;
 
+@ControllerAdvice
+public class GlobalExceptionHandler {
+
+	
+	
+	
 	@ExceptionHandler(value = { IllegalArgumentException.class, EmptyResultDataAccessException.class })
 	@ResponseBody
 	public ResponseEntity<String> illegalArgumentExceptionHadler(RuntimeException ex) {
@@ -25,9 +32,18 @@ public class GlobalExceptionHandler  {
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	@ResponseBody
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
-	public List<FieldError> handleMethodArgumentNotValidExcepiton(MethodArgumentNotValidException mValidException,
+	public ServiceResult<?> handleMethodArgumentNotValidExcepiton(MethodArgumentNotValidException mValidException,
 			BindingResult bindingResult) {
+		
 		List<FieldError> fieldErrors = mValidException.getFieldErrors();
-		return fieldErrors;
+
+		List<ErrorDetail> errorDetails = new ArrayList<>();
+
+		if (fieldErrors != null && fieldErrors.size() > 0) {
+			fieldErrors.forEach(fieldError -> errorDetails
+					.add(new ErrorDetail(fieldError.getCode(),fieldError.getField(), fieldError.getDefaultMessage())));
+		}
+
+		return new ServiceResult<>(errorDetails);
 	}
 }
