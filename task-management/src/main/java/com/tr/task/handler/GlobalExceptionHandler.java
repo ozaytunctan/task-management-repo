@@ -3,6 +3,9 @@ package com.tr.task.handler;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +23,12 @@ import com.tr.task.dto.ServiceResult;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-	
-	
-	
+	@Autowired
+	private MessageSource messageSource;
+
 	@ExceptionHandler(value = { IllegalArgumentException.class, EmptyResultDataAccessException.class })
 	@ResponseBody
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
 	public ResponseEntity<String> illegalArgumentExceptionHadler(RuntimeException ex) {
 		return ResponseEntity.ok(ex.getMessage());
 	}
@@ -34,14 +38,15 @@ public class GlobalExceptionHandler {
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
 	public ServiceResult<?> handleMethodArgumentNotValidExcepiton(MethodArgumentNotValidException mValidException,
 			BindingResult bindingResult) {
-		
+
 		List<FieldError> fieldErrors = mValidException.getFieldErrors();
 
 		List<ErrorDetail> errorDetails = new ArrayList<>();
 
 		if (fieldErrors != null && fieldErrors.size() > 0) {
-			fieldErrors.forEach(fieldError -> errorDetails
-					.add(new ErrorDetail(fieldError.getCode(),fieldError.getField(), fieldError.getDefaultMessage())));
+			fieldErrors.forEach(fieldError -> errorDetails.add(new ErrorDetail(fieldError.getCode(),
+					fieldError.getField(),
+					messageSource.getMessage(fieldError.getDefaultMessage(), null, LocaleContextHolder.getLocale()))));
 		}
 
 		return new ServiceResult<>(errorDetails);

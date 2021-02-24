@@ -8,7 +8,7 @@ import com.tr.task.validations.UniqueUsername;
 public class UserDto extends BaseDto<Long> {
 
 	@NotNull ()
-	@UniqueUsername(message = "avaaa")
+	@UniqueUsername(message = "error.username.exists")
 	private String userName;
 
 	@NotNull

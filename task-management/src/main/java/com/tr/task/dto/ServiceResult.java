@@ -3,40 +3,42 @@ package com.tr.task.dto;
 import java.util.List;
 
 import com.tr.task.enums.ServiceResultType;
-
+/**
+ * 
+ * @author otunctan
+ *
+ * @param <T>
+ */
 public class ServiceResult<T> {
 
+	private T data;
+	
+	private List<ErrorDetail> errors;
+	
 	private ServiceResultType resultType;
 
-	private T data;
-
-	private List<ErrorDetail> errors;
-
-	public ServiceResult(List<ErrorDetail> errors) {
-		this(ServiceResultType.ERROR, errors);
-	}
-
+	
 	public ServiceResult(T data) {
-		this(ServiceResultType.SUCCESS, data);
+		this(data, ServiceResultType.SUCCESS);
 	}
-
-	public ServiceResult(ServiceResultType resultType, List<ErrorDetail> errors) {
-		super();
-		this.resultType = resultType;
-		this.errors = errors;
+	
+	public ServiceResult(List<ErrorDetail> errors) {
+		this(errors, ServiceResultType.ERROR);
 	}
-
-	public ServiceResult(ServiceResultType resultType, T data) {
+	
+	public ServiceResult(List<ErrorDetail> errors, ServiceResultType resultType) {
+		this(null, errors, resultType);
+	}
+	
+	public ServiceResult(T data, ServiceResultType resultType) {
+		this(data, null, resultType);
+	}
+	
+	public ServiceResult(T data, List<ErrorDetail> errors, ServiceResultType resultType) {
 		super();
-		this.resultType = resultType;
 		this.data = data;
-	}
-
-	public ServiceResult(ServiceResultType resultType, T data, List<ErrorDetail> errors) {
-		super();
-		this.resultType = resultType;
-		this.data = data;
 		this.errors = errors;
+		this.resultType = resultType;
 	}
 
 	public ServiceResultType getResultType() {

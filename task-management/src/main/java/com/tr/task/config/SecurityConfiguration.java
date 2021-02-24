@@ -95,7 +95,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		configuration.setAllowedOriginPatterns(Arrays.asList("*"));
 		configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
 		configuration.setAllowedHeaders(
-				Arrays.asList("X-AUTH-TOKEN", "Cache-Control", "Content-Type", "Cookie", "Set-Cookie", "HARDWARE_CPU"));
+				Arrays.asList("X-AUTH-TOKEN", "Cache-Control", "Content-Type", "Cookie", "Set-Cookie"));
 		configuration.setMaxAge(Long.valueOf(60 * 60 * 24)); // cache option request for 24 hour
 		configuration.setAllowCredentials(true);
 
