@@ -9,6 +9,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -51,4 +52,18 @@ public class GlobalExceptionHandler {
 
 		return new ServiceResult<>(errorDetails);
 	}
+	
+	@ExceptionHandler(BadCredentialsException.class)
+	@ResponseBody
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
+	public ServiceResult<?> handleBadCredentialsException(BadCredentialsException ex) {
+		List<ErrorDetail> errorDetails = new ArrayList<>();
+		errorDetails.add(new ErrorDetail(messageSource.getMessage(ex.getMessage(), null, LocaleContextHolder.getLocale())));
+		return new ServiceResult<>(errorDetails);
+	}
+	
+	
+	
+	
+	
 }
