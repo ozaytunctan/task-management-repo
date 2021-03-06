@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.tr.task.aspect.Loggable;
@@ -18,6 +19,7 @@ import com.tr.task.entity.Task;
 import com.tr.task.enums.TaskStatus;
 import com.tr.task.exceptions.NotFoundEntityException;
 import com.tr.task.mapper.TaskMapper;
+import com.tr.task.properties.SchedulingProperties;
 import com.tr.task.repository.TaskRepository;
 import com.tr.task.repository.UserRepository;
 import com.tr.task.service.BaseService;
@@ -34,6 +36,9 @@ public class TaskServiceImpl extends BaseService implements TaskService {
 
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private SchedulingProperties schedulingProperties;
 
 	public TaskServiceImpl() {
 		super(TaskServiceImpl.class);
@@ -132,6 +137,15 @@ public class TaskServiceImpl extends BaseService implements TaskService {
 		taskEntity = this.taskRepository.saveAndFlush(taskEntity);
 
 		return new TaskUpdateDto(taskId, taskStatus);
+	}
+	
+	@Scheduled(fixedDelayString = "${application.scheduling.task.fixed-delay-in-milli-second}")
+	public void onTaskAutoClose() {
+		if (!schedulingProperties.getTask().isEnable())
+			return;
+		
+		//Yapılacak işlem burda yazılacak.
+		
 	}
 
 }

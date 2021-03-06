@@ -32,7 +32,7 @@ public class Startup implements CommandLineRunner {
 		
 		List<Task>tasks=new ArrayList<>();
 		
-		for (int i=0;i<1_000;i++) {
+		for (int i=0;i<20;i++) {
 			Task task=new Task();
 			task.setName("görev-"+i);
 			task.setDescription("görev aciklamasi"+i);
