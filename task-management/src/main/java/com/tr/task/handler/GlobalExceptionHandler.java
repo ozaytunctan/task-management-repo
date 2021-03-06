@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.tr.task.dto.ErrorDetail;
 import com.tr.task.dto.ServiceResult;
-import com.tr.task.exceptions.NotFoundEntityException;
+import com.tr.task.exceptions.BusinessException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -53,26 +53,26 @@ public class GlobalExceptionHandler {
 
 		return new ServiceResult<>(errorDetails);
 	}
-	
+
 	@ExceptionHandler(BadCredentialsException.class)
 	@ResponseBody
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
 	public ServiceResult<?> handleBadCredentialsException(BadCredentialsException ex) {
 		List<ErrorDetail> errorDetails = new ArrayList<>();
-		errorDetails.add(new ErrorDetail(messageSource.getMessage(ex.getMessage(), null, LocaleContextHolder.getLocale())));
+		errorDetails
+				.add(new ErrorDetail(messageSource.getMessage(ex.getMessage(), null, LocaleContextHolder.getLocale())));
 		return new ServiceResult<>(errorDetails);
 	}
-	
-	@ExceptionHandler(NotFoundEntityException.class)
+
+	@ExceptionHandler(BusinessException.class)
 	@ResponseBody
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
-	public ServiceResult<?> entityNotFoundExcrpitons(NotFoundEntityException ex) {
+	public ServiceResult<?> handleBusinessException(BusinessException ex) {
 		List<ErrorDetail> errorDetails = new ArrayList<>();
-		errorDetails.add(new ErrorDetail(messageSource.getMessage(ex.getMessage(), ex.getArgs(), LocaleContextHolder.getLocale())));
+		errorDetails.add(new ErrorDetail(
+				messageSource.getMessage(ex.getMessage(), ex.getArgs(), LocaleContextHolder.getLocale())));
 		return new ServiceResult<>(errorDetails);
 	}
 	
-	
-	
-	
+
 }

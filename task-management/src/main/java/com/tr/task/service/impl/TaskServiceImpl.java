@@ -17,7 +17,7 @@ import com.tr.task.dto.TaskDto;
 import com.tr.task.dto.TaskUpdateDto;
 import com.tr.task.entity.Task;
 import com.tr.task.enums.TaskStatus;
-import com.tr.task.exceptions.NotFoundEntityException;
+import com.tr.task.exceptions.BusinessException;
 import com.tr.task.mapper.TaskMapper;
 import com.tr.task.properties.SchedulingProperties;
 import com.tr.task.repository.TaskRepository;
@@ -130,7 +130,7 @@ public class TaskServiceImpl extends BaseService implements TaskService {
 	@Override
 	public TaskUpdateDto updateTaskStatus(Long taskId, TaskStatus taskStatus) {
 		Task taskEntity = this.taskRepository.findById(taskId)//
-				.orElseThrow(() -> new NotFoundEntityException("error.entity.not-found","Task",taskId));
+				.orElseThrow(() -> new BusinessException("error.entity.not-found","Task",taskId));
 
 		taskEntity.setStatus(taskStatus);
 

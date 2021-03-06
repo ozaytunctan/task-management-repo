@@ -16,24 +16,20 @@ public class ServiceResult<T> {
 	private List<ErrorDetail> errors;
 	
 	private ServiceResultType resultType;
-
 	
-	public ServiceResult(T data) {
-		this(data, ServiceResultType.SUCCESS);
-	}
 	
 	public ServiceResult(List<ErrorDetail> errors) {
-		this(errors, ServiceResultType.ERROR);
-	}
-	
-	public ServiceResult(List<ErrorDetail> errors, ServiceResultType resultType) {
-		this(null, errors, resultType);
+		this(null, errors, ServiceResultType.ERROR);
 	}
 	
 	public ServiceResult(T data, ServiceResultType resultType) {
 		this(data, null, resultType);
 	}
 	
+	public ServiceResult(ServiceResultType resultType,List<ErrorDetail> errors) {
+		this(null, errors, resultType);
+	}
+
 	public ServiceResult(T data, List<ErrorDetail> errors, ServiceResultType resultType) {
 		super();
 		this.data = data;

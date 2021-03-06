@@ -1,6 +1,6 @@
 package com.tr.task.exceptions;
 
-public class NotFoundEntityException extends RuntimeException {
+public class BusinessException extends RuntimeException {
 
 	/**
 	 * 
@@ -10,13 +10,18 @@ public class NotFoundEntityException extends RuntimeException {
 
 	private String message;
 	
-	private Object []args;
-
+	private Object[] args;
 	
-	public NotFoundEntityException(String message,Object ...args) {
+	
+	public BusinessException(String message) {
 		super(message);
-		this.message=message;
-		this.args=args;
+		this.setMessage(message);
+	}
+	
+	public BusinessException(String message,Object ...args) {
+		super(message);
+		this.setMessage(message);
+		this.setArgs(args);
 	}
 
 	public String getMessage() {
