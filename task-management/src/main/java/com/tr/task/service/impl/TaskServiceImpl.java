@@ -6,6 +6,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.tr.task.aspect.Loggable;
@@ -14,6 +16,7 @@ import com.tr.task.dto.TaskDto;
 import com.tr.task.dto.TaskUpdateDto;
 import com.tr.task.entity.Task;
 import com.tr.task.enums.TaskStatus;
+import com.tr.task.exceptions.NotFoundEntityException;
 import com.tr.task.mapper.TaskMapper;
 import com.tr.task.repository.TaskRepository;
 import com.tr.task.repository.UserRepository;
@@ -56,8 +59,10 @@ public class TaskServiceImpl extends BaseService implements TaskService {
 	@Override
 	public PagedResultDto<TaskDto> getAllTasks(Integer page, Integer size) {
 		Page<Task> taskPage = this.taskRepository.findAll(PageRequest.of(page, size));
-		return new PagedResultDto<>(this.taskMapper.tasksToTaskDtos(taskPage.getContent()), taskPage.getNumber(),
-				taskPage.getSize(), taskPage.getTotalElements());
+		return new PagedResultDto<>(this.taskMapper.tasksToTaskDtos(taskPage.getContent()), //
+				taskPage.getNumber(), //
+				taskPage.getSize(), //
+				taskPage.getTotalElements());
 	}
 
 	@Override
@@ -69,7 +74,7 @@ public class TaskServiceImpl extends BaseService implements TaskService {
 		taskEntity.setName(task.getName());
 		taskEntity.setAssignee(this.userRepository.getOne(task.getAssigneeId()));
 		taskEntity.setCompletedDate(task.getCompletedDate());
-        taskEntity.setStatus(task.getStatus());
+		taskEntity.setStatus(task.getStatus());
 		this.taskRepository.save(taskEntity);
 
 		task.setId(id);
@@ -80,18 +85,28 @@ public class TaskServiceImpl extends BaseService implements TaskService {
 	@Override
 	public PagedResultDto<TaskDto> getTasksByTaskStatus(TaskStatus status, Integer page, Integer size) {
 
-		Page<Task> assignedTaskPage = this.taskRepository.findByStatus(status, PageRequest.of(page, size));
+		Page<Task> assignedTaskPage = this.taskRepository.findByStatus(status, //
+				PageRequest.of(page, //
+						size, //
+						Sort.by(Direction.ASC, "name", "completedDate")//
+				));
 
-		return new PagedResultDto<>(this.taskMapper.tasksToTaskDtos(assignedTaskPage.getContent()),
-				assignedTaskPage.getNumber(), assignedTaskPage.getSize(), assignedTaskPage.getTotalElements());
+		return new PagedResultDto<>(this.taskMapper.tasksToTaskDtos(assignedTaskPage.getContent()), //
+				assignedTaskPage.getNumber(), //
+				assignedTaskPage.getSize(), //
+				assignedTaskPage.getTotalElements());
 	}
 
 	@Override
 	public PagedResultDto<TaskDto> getTasksByAssigneeId(Long assigneeId, Integer page, Integer size) {
-		Page<Task> assignedTaskPage = this.taskRepository.findByAssigneeId(assigneeId, PageRequest.of(page, size));
+		Page<Task> assignedTaskPage = this.taskRepository.findByAssigneeId(assigneeId, //
+				PageRequest.of(page, size)//
+		);
 
-		return new PagedResultDto<>(this.taskMapper.tasksToTaskDtos(assignedTaskPage.getContent()),
-				assignedTaskPage.getNumber(), assignedTaskPage.getSize(), assignedTaskPage.getTotalElements());
+		return new PagedResultDto<>(this.taskMapper.tasksToTaskDtos(assignedTaskPage.getContent()), //
+				assignedTaskPage.getNumber(), //
+				assignedTaskPage.getSize(), //
+				assignedTaskPage.getTotalElements());
 	}
 
 	@Override
@@ -105,6 +120,18 @@ public class TaskServiceImpl extends BaseService implements TaskService {
 		this.taskRepository.deleteById(id);
 
 		return true;
+	}
+
+	@Override
+	public TaskUpdateDto updateTaskStatus(Long taskId, TaskStatus taskStatus) {
+		Task taskEntity = this.taskRepository.findById(taskId)//
+				.orElseThrow(() -> new NotFoundEntityException("error.entity.not-found","Task",taskId));
+
+		taskEntity.setStatus(taskStatus);
+
+		taskEntity = this.taskRepository.saveAndFlush(taskEntity);
+
+		return new TaskUpdateDto(taskId, taskStatus);
 	}
 
 }

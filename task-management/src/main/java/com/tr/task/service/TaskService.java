@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.tr.task.dto.PagedResultDto;
 import com.tr.task.dto.TaskDto;
-import com.tr.task.dto.TaskHistoryDto;
 import com.tr.task.dto.TaskUpdateDto;
 import com.tr.task.enums.TaskStatus;
 
@@ -26,5 +25,7 @@ public interface TaskService {
 	TaskUpdateDto updateTaskCompletedDate(Long id,Date completedDate);
 	
 	boolean deleteTaskById(Long id);
+
+	TaskUpdateDto updateTaskStatus(Long taskId,TaskStatus taskStatus);
 
 }

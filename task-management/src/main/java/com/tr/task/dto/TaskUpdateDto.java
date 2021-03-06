@@ -27,6 +27,23 @@ public class TaskUpdateDto extends BaseDto<Long> {
 
 	}
 
+    
+	public TaskUpdateDto(String name, String description, TaskStatus status, Long assigneeId, Date completedDate) {
+		super();
+		this.name = name;
+		this.description = description;
+		this.status = status;
+		this.assigneeId = assigneeId;
+		this.completedDate = completedDate;
+	}
+	
+	public TaskUpdateDto(Long id, TaskStatus status) {
+		super();
+		this.setId(id);
+		this.status = status;
+	}
+
+
 	public String getName() {
 		return name;
 	}

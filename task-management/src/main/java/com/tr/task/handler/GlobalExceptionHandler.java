@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.tr.task.dto.ErrorDetail;
 import com.tr.task.dto.ServiceResult;
+import com.tr.task.exceptions.NotFoundEntityException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -62,6 +63,14 @@ public class GlobalExceptionHandler {
 		return new ServiceResult<>(errorDetails);
 	}
 	
+	@ExceptionHandler(NotFoundEntityException.class)
+	@ResponseBody
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
+	public ServiceResult<?> entityNotFoundExcrpitons(NotFoundEntityException ex) {
+		List<ErrorDetail> errorDetails = new ArrayList<>();
+		errorDetails.add(new ErrorDetail(messageSource.getMessage(ex.getMessage(), ex.getArgs(), LocaleContextHolder.getLocale())));
+		return new ServiceResult<>(errorDetails);
+	}
 	
 	
 	

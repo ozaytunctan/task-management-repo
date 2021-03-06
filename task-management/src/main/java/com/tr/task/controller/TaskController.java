@@ -30,23 +30,23 @@ public class TaskController {
 
 	@GetMapping(path = "/all")
 	public ResponseEntity<PagedResultDto<TaskDto>> getAllTask(
-			@Valid @RequestParam(name = "page", defaultValue = "1") @Min(value = 1) Integer page,
+			@Valid @RequestParam(name = "page", defaultValue = "1") @Min(value = 1) Integer page, //
 			@RequestParam(name = "size", defaultValue = "25") Integer size) {
 		return ResponseEntity.ok(this.taskService.getAllTasks(page - 1, size));
 	}
 
 	@GetMapping(path = "/getTasksByStatus")
 	public ResponseEntity<PagedResultDto<TaskDto>> getTasksByStatus(
-			@Valid @RequestParam(name = "page", defaultValue = "1") @Min(value = 1) Integer page,
-			@RequestParam(name = "size", defaultValue = "25") Integer size,
+			@Valid @RequestParam(name = "page", defaultValue = "1") @Min(value = 1) Integer page, //
+			@RequestParam(name = "size", defaultValue = "25") Integer size, //
 			@RequestParam(name = "status", required = true) TaskStatus taskStatus) {
 		return ResponseEntity.ok(this.taskService.getTasksByTaskStatus(taskStatus, page - 1, size));
 	}
 
 	@GetMapping(path = "/getTasksByAssigneeId")
 	public ResponseEntity<PagedResultDto<TaskDto>> getTasksByStatus(
-			@Valid @RequestParam(name = "page", defaultValue = "1") @Min(value = 1) Integer page,
-			@RequestParam(name = "size", defaultValue = "25") Integer size,
+			@Valid @RequestParam(name = "page", defaultValue = "1") @Min(value = 1) Integer page, //
+			@RequestParam(name = "size", defaultValue = "25") Integer size, //
 			@RequestParam(name = "id", required = true) Long assigneeId) {
 		return ResponseEntity.ok(this.taskService.getTasksByAssigneeId(assigneeId, page - 1, size));
 	}
@@ -57,9 +57,15 @@ public class TaskController {
 	}
 
 	@PutMapping(path = "/edit/{id}")
-	public ResponseEntity<TaskUpdateDto> createTask(@PathVariable(name = "id", required = true) Long id,
+	public ResponseEntity<TaskUpdateDto> updateTask(@PathVariable(name = "id", required = true) Long id, //
 			@RequestBody TaskUpdateDto task) {
 		return ResponseEntity.ok(this.taskService.updateTask(id, task));
+	}
+
+	@PutMapping(path = "/edit/status/{id}")
+	public ResponseEntity<TaskUpdateDto> updateTaskStatus(@PathVariable(name = "id", required = true) Long id,
+			@RequestBody TaskStatus taskStatus) {
+		return ResponseEntity.ok(this.taskService.updateTaskStatus(id, taskStatus));
 	}
 
 	@DeleteMapping(path = "/delete/{id}")
