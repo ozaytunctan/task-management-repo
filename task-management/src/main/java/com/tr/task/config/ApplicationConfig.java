@@ -67,6 +67,7 @@ public class ApplicationConfig {
 	public TaskExecutor taskExecutor() {
 		ThreadPoolTaskExecutor threadPoolTaskExecutor = new ThreadPoolTaskExecutor();
 		threadPoolTaskExecutor.setThreadNamePrefix("Task-Management");
+		threadPoolTaskExecutor.setThreadGroupName("Task-Group");
 		threadPoolTaskExecutor.setCorePoolSize(100);
 		return threadPoolTaskExecutor;
 	}

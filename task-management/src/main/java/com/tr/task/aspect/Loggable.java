@@ -5,8 +5,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target(ElementType.METHOD)
+import javax.transaction.Transactional;
+
+@Target({ElementType.METHOD,ElementType.TYPE,ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
+@Transactional
 public @interface Loggable {
 
 }

@@ -49,6 +49,7 @@ public class TaskServiceImpl extends BaseService implements TaskService {
 		return this.taskMapper.tasksToTaskDtos(taskRepository.findAll());
 	}
 
+	@Loggable
 	@Override
 	public TaskDto save(TaskDto dto) {
 		Task task = this.taskMapper.taskDtoToTask(dto);
@@ -70,6 +71,7 @@ public class TaskServiceImpl extends BaseService implements TaskService {
 				taskPage.getTotalElements());
 	}
 
+	@Loggable
 	@Override
 	public TaskUpdateDto updateTask(Long id, TaskUpdateDto task) {
 
@@ -87,6 +89,7 @@ public class TaskServiceImpl extends BaseService implements TaskService {
 		return task;
 	}
 
+	@Loggable
 	@Override
 	public PagedResultDto<TaskDto> getTasksByTaskStatus(TaskStatus status, Integer page, Integer size) {
 
@@ -101,7 +104,8 @@ public class TaskServiceImpl extends BaseService implements TaskService {
 				assignedTaskPage.getSize(), //
 				assignedTaskPage.getTotalElements());
 	}
-
+	
+	@Loggable
 	@Override
 	public PagedResultDto<TaskDto> getTasksByAssigneeId(Long assigneeId, Integer page, Integer size) {
 		Page<Task> assignedTaskPage = this.taskRepository.findByAssigneeId(assigneeId, //
@@ -113,7 +117,8 @@ public class TaskServiceImpl extends BaseService implements TaskService {
 				assignedTaskPage.getSize(), //
 				assignedTaskPage.getTotalElements());
 	}
-
+	
+	@Loggable
 	@Override
 	public TaskUpdateDto updateTaskCompletedDate(Long id, Date completedDate) {
 		return null;

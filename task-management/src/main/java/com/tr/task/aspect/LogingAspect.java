@@ -8,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import com.tr.task.utils.FactoryUtils;
+
 @Component
 @Aspect
 public class LogingAspect {
@@ -43,7 +45,7 @@ public class LogingAspect {
 
 	@Around("@annotation(com.tr.task.aspect.Loggable)")
 	public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
-		long startTime = System.currentTimeMillis();
+		long startTime = FactoryUtils.tic();
 
 		StringBuilder message = new StringBuilder();
 		message.append(joinPoint.getSignature().getDeclaringTypeName());
@@ -51,7 +53,7 @@ public class LogingAspect {
 		message.append(joinPoint.getSignature().getName() + "()");
 
 		Object returnValue = joinPoint.proceed();
-		long elapsedTime = System.currentTimeMillis() - startTime;
+		long elapsedTime = FactoryUtils.toc(startTime);
 
 		LOGGER.info(message.toString());
 

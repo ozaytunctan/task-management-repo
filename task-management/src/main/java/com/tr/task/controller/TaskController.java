@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tr.task.aspect.Loggable;
 import com.tr.task.dto.PagedResultDto;
 import com.tr.task.dto.TaskDto;
 import com.tr.task.dto.TaskUpdateDto;
@@ -44,6 +45,7 @@ public class TaskController {
 	}
 
 	@GetMapping(path = "/getTasksByAssigneeId")
+	@Loggable
 	public ResponseEntity<PagedResultDto<TaskDto>> getTasksByStatus(
 			@Valid @RequestParam(name = "page", defaultValue = "1") @Min(value = 1) Integer page, //
 			@RequestParam(name = "size", defaultValue = "25") Integer size, //
@@ -51,7 +53,7 @@ public class TaskController {
 		return ResponseEntity.ok(this.taskService.getTasksByAssigneeId(assigneeId, page - 1, size));
 	}
 
-	@PostMapping(path = "/register")
+	@PostMapping(path = "/create")
 	public ResponseEntity<TaskDto> createTask(@RequestBody TaskDto dto) {
 		return ResponseEntity.ok(this.taskService.save(dto));
 	}
@@ -63,6 +65,7 @@ public class TaskController {
 	}
 
 	@PutMapping(path = "/edit/status/{id}")
+	@Loggable
 	public ResponseEntity<TaskUpdateDto> updateTaskStatus(@PathVariable(name = "id", required = true) Long id,
 			@RequestBody TaskStatus taskStatus) {
 		return ResponseEntity.ok(this.taskService.updateTaskStatus(id, taskStatus));
